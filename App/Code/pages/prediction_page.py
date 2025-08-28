@@ -142,8 +142,8 @@ def result(year,engine,max_power,seats,fuel,tranmission,submit_hardcode):
     # print(year + engine)
     # model = XGBRegressor()
     # model.load_model("..\xgb_model.json")
-    model = joblib.load("model.pkl")
-    scaler = joblib.load("scaler.pkl")
+    model = joblib.load("../models/model.pkl")
+    scaler = joblib.load("../models/scaler.pkl")
     X =[[year,engine,max_power,seats,fuel,tranmission]]
     X_scaled = scaler.transform(X)
     pred = model.predict(X_scaled)

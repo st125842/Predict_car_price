@@ -1,3 +1,4 @@
+`Run ` `cd App` <br>
 `Run ` `docker-compose up --build` to start the app.<br>
 `Open` http://localhost:8050
 # My Web Page
