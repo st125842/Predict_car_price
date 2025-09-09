@@ -2,6 +2,7 @@ from dash import Dash, html, Output, Input, dcc
 import dash
 import dash_bootstrap_components as dbc
 import os
+from models.model import *
 # Initialize the app - incorporate a Dash Bootstrap theme
 external_stylesheets = [dbc.themes.CERULEAN]
 app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP],)
@@ -11,7 +12,7 @@ from pages.main_page import *
 navbar = dbc.NavbarSimple(
     children=[
         dbc.NavItem(dbc.NavLink("Home", href="/")),
-        dbc.NavItem(dbc.NavLink("XGBoost", href="/model1")),
+        dbc.NavItem(dbc.NavLink("Predict", href="/model1")),
     ],
     brand="Well Come To My page ST125842",
     brand_href="/",

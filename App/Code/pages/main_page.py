@@ -1,47 +1,104 @@
 import dash
-from dash import Dash, html, callback, Output, Input, State, dcc
+from dash import html
 import dash_bootstrap_components as dbc
+
 dash.register_page(__name__, path='/')
 
-layout = html.Div([
-    html.H2("Instruction How To Should My Model"),
-    html.P("You can click XGBoost predict on navigation bar to predict"),
-    html.Div([
-        html.P("I use XGBoosting Model for this task.I will briefly what is XGBoosting"),
-        html.H4("XGBoost (Extreme Gradient Boosting)"),
-        html.Ul([
-            html.Li("Type: Supervised learning algorithm"),
-            html.Li("Core Idea: Gradient boosting — builds an ensemble of decision trees sequentially, where each new tree tries to correct errors of previous trees."),
-            html.Li("Steps"),
-            html.Ol([html.Li("Initialize a model"),
-                     html.Li("Compute residuals"),
-                     html.Li("Fit a new tree to predict"),
-                     html.Li("Update the model (weighted by learning rate)"),
-                     html.Li('Repeat until max trees or early stopping.')
-                     ]),
-        ])    
+layout = dbc.Container([
+    html.H1("Welcome to the Car Price Predictor", className="text-center my-4 text-primary"),
+    html.Hr(className="my-3"),
+
+    dbc.Row([
+        dbc.Col([
+            dbc.Card([
+                dbc.CardBody([
+                    html.H3("Model Usage Instructions", className="text-info mb-3"),
+                    html.P("Welcome! Use this page to understand how to use the prediction models available in this app."),
+                    html.P("To get started, navigate to the 'Predict' page to input your car's specifications and see a price prediction."),
+                ])
+            ], className="mb-4 shadow-sm")
+        ])
     ]),
 
-    html.Div([
-        html.H4('Prediction'),
-        html.P('For prection page required 6 freature'),
-        html.Ul([
-            html.Li("Years: input only numeric, example 2020"),
-            html.Li("engine: input only numeric, example  1245 cc then type 1245"),
-            html.Li("max power: input only numeric, example 100 bhp then type 100"),
-            html.Li("seats: input only numeric, example 5"),
-            html.Li("fuel:  input only numeric 0 for Diesel and 1 for Petrol "),
-            html.Li("transmission: input only numeric 0 for Auto and 1 for Manual"),
-        ]),
-        html.P('For Unknow value you can skip that field but I will fill that value by'),
-        html.Ul([
-            html.Li("Years: I will fill 2020 that is latest year."),
-            html.Li("engine: I will fill median base on my training set"),
-            html.Li("max power: I will fill mean base on my training set"),
-            html.Li("seats: I will fill mode base on my training set"),
-            html.Li("fuel: I will fill mode base on my training set"),
-            html.Li("transmission: I will fill mode base on my training set"),
-        ]),
+    dbc.Row([
+        dbc.Col([
+            dbc.Card([
+                dbc.CardBody([
+                    html.H4("📌 Available Models", className="text-info mt-1 mb-3"),
+                    dbc.Accordion([
+                        dbc.AccordionItem([
+                            html.P("XGBoost is a powerful ensemble method based on decision trees. It builds models sequentially where each new tree corrects the previous one's errors."),
+                            html.Ul([
+                                html.Li("🔍 Type: Supervised Learning"),
+                                html.Li("💡 Uses: Handling structured/tabular data efficiently"),
+                                html.Li([
+                                    "🛠 Steps:",
+                                    html.Ol([
+                                        html.Li("Initialize a base model"),
+                                        html.Li("Compute residual errors"),
+                                        html.Li("Fit a decision tree to residuals"),
+                                        html.Li("Update the model (weighted by learning rate)"),
+                                        html.Li("Repeat until stopping criteria")
+                                    ])
+                                ])
+                            ])
+                        ], title="📈 XGBoost (Extreme Gradient Boosting)", className="mb-2"),
 
+                        dbc.AccordionItem([
+                            html.P("Polynomial Regression fits a curved line (polynomial function) to the data. It's useful when relationships between variables are non-linear."),
+                            html.Ul([
+                                html.Li("🔍 Type: Supervised Learning"),
+                                html.Li("📐 Fits polynomial functions (e.g., quadratic, cubic)"),
+                                html.Li("💡 Use for modeling curves in data"),
+                                html.Li([
+                                    "🛠 Steps:",
+                                    html.Ol([
+                                        html.Li("Choose the polynomial degree (e.g., 2 for quadratic)"),
+                                        html.Li("Transform input features to polynomial terms"),
+                                        html.Li("Fit a Linear Regression on transformed features"),
+                                        html.Li("Make predictions")
+                                    ])
+                                ])
+                            ])
+                        ], title="📉 Polynomial Regression", className="mb-2"),
+                    ])
+                ])
+            ], className="mb-4 shadow-sm")
+        ])
+    ]),
+    
+    dbc.Row([
+        dbc.Col([
+            dbc.Card([
+                dbc.CardHeader("🔮 Prediction Input Requirements", className="bg-info text-white"),
+                dbc.CardBody([
+                    html.P("To make a prediction, please provide the following 6 features:", className="lead"),
+                    html.Ul([
+                        html.Li("📅 Year: Numeric input (e.g., 2020)"),
+                        html.Li("⚙️ Engine: Numeric input (e.g., 1245 for 1245cc)"),
+                        html.Li("⚡ Max Power: Numeric input (e.g., 100 for 100 bhp)"),
+                        html.Li("🪑 Seats: Numeric input (e.g., 5)"),
+                        html.Li("⛽ Fuel: Use 0 for Diesel, 1 for Petrol"),
+                        html.Li("🔁 Transmission: Use 0 for Auto, 1 for Manual")
+                    ], className="list-unstyled"),
+                    html.Hr(),
+                    html.P("If a field is left empty, the system will auto-fill with default values:", className="fw-bold text-muted"),
+                    html.Ul([
+                        html.Li("📅 Year: 2020"),
+                        html.Li("⚙️ Engine: Median from training data"),
+                        html.Li("⚡ Max Power: Mean from training data"),
+                        html.Li("🪑 Seats: Most common value"),
+                        html.Li("⛽ Fuel: Most common fuel type"),
+                        html.Li("🔁 Transmission: Most common transmission type")
+                    ], className="text-muted small")
+                ])
+            ], className="mb-4 shadow-sm")
+        ])
+    ]),
+
+    dbc.Row([
+        dbc.Col([
+            dbc.Alert("✅ Ready to try it out? Navigate to the Predict page!", color="success", className="text-center my-4")
+        ])
     ])
-])
+], fluid=False, className="my-5")
