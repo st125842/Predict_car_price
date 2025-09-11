@@ -22,4 +22,4 @@ COPY . .
 EXPOSE 8050
 
 # Run the app
-CMD ["python", "/root/code/Code/index.py"]
+# CMD ["python", "/root/code/Code/index.py"]
