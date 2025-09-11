@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  dash_app:
+    command: python index.py
+    build: 
+      context: .
+      dockerfile: .dockerfile
+    container_name: dash_app
+    ports:
+      - "9001:80"
+    volumes:
+      - ./code:/root/code
+      - ./vscode-server:/root/.vscode-server
+    environment:
+      - HOST=0.0.0.0
+      - PORT=80
+    # command: python Code/page/index.py

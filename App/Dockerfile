@@ -2,7 +2,7 @@
 FROM python:3.10.9-slim
 
 # Set working directory
-WORKDIR /app
+WORKDIR /root/code
 
 # Install system dependencies (if needed for dash/plotly)
 RUN apt-get update && apt-get install -y \
@@ -22,4 +22,4 @@ COPY . .
 EXPOSE 8050
 
 # Run the app
-CMD ["python", "/app/Code/index.py"]
+CMD ["python", "/root/code/Code/index.py"]
