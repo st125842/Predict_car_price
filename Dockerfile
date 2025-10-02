@@ -1,5 +1,5 @@
 # Use Python 3.10.9 base image
-FROM python:3.10.9-slim
+FROM python:3.12.11-slim
 
 # Set working directory
 WORKDIR /root/code
@@ -8,6 +8,8 @@ WORKDIR /root/code
 RUN apt-get update && apt-get install -y \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
+
+RUN pip install --upgrade pip
 
 # Copy requirements first (for caching)
 COPY requirements.txt .

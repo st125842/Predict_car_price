@@ -8,12 +8,14 @@ from xgboost import XGBRegressor
 import sys
 import mlflow
 import mlflow.pyfunc
-from models.model import Polynomial,LinearRegression
-
+from models.model import *
+from utils import *
 # app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 dash.register_page(__name__, path='/model1')
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 os.chdir(BASE_DIR)
+
+
 
 text = html.Div([
     html.H1("Car Price Prediction", className="text-center my-4"),
@@ -29,6 +31,7 @@ model_selector_card = dbc.Card(
             options=[
                 {"label": "XGBoost", "value": "xgb"},
                 {"label": "Polynomial Regression", "value": "pr"},
+                # {"label": "Logistic Regression", "value": "lc"},
             ],
             value="xgb",
             clearable=False,
@@ -140,39 +143,64 @@ def result(model_choice, year, engine, max_power, seats, fuel, transmission, n_c
     fuel = fuel if fuel is not None else 0
     transmission = transmission if transmission is not None else 1
 
-    try:
-        # Construct absolute paths to the model files
-        scaler_path = os.path.join(BASE_DIR, '..', 'models', 'scaler.pkl')
-        model_path = os.path.join(BASE_DIR, '..', 'models', 'model.pkl')
-        # poly_model_path = os.path.join(BASE_DIR, '..', 'models', 'model_polynomial.pkl')
-        model_uri = "../mlruns/0/models/m-8f5af5f6d6404e678c6762691bd8faee/artifacts"
-        
-        # print(best_model)
-        # Load the scaler
-        scaler = joblib.load(scaler_path)
+    # try:
+    # Construct absolute paths to the model files
+    model_path,model_url = get_model_path()
+    scaler_path = get_scaler_path()
+    temp = mlflow_model()
+    # print(os.getcwd())
+    scaler = load_scaler(os.path.join('..',str(scaler_path) ))
+    X = [[year, engine, max_power, seats, fuel, transmission]]
+    X_scaled = scaler.transform(X)
+    # print(X_scaled)
+    # print(model_url, model_path)
+    # print(scaler_path)
+    # print(os.path.join('..','models', 'model.pkl'))
+    # print('-------------------')
+    # temp = 
+    
+    # print(model)
+    if model_choice == 'xgb':
+        model = joblib.load(os.path.join('..',str(model_path) ))
+        pred = model.predict(X_scaled)
+        # pred = load_model_predict(model_choice,model_path,X_scaled)
+    elif model_choice == 'pr':
+    
+        model = joblib.load(os.path.join('..',str(model_url) ))
+        # This predict call assumes your custom Polynomial class has a predict method that takes a boolean
+        pred = model.predict(X_scaled, True)
 
-        # Create input array and scale it
-        X = [[year, engine, max_power, seats, fuel, transmission]]
-        X_scaled = scaler.transform(X)
+    else:
+        return "Please select a valid model."
+    print(pred)
+    final_price = np.exp(pred)
+    return f"{final_price[0]:,.2f} Bath"
 
-        if model_choice == 'xgb':
-            # Load and predict with XGBoost model
-            model = joblib.load(model_path)
-            pred = model.predict(X_scaled)
-        elif model_choice == 'pr':
-            # Load and predict with Polynomial Regression model
-            model = mlflow.sklearn.load_model(model_uri)
-            # model = joblib.load(poly_model_path)
-            # This predict call assumes your custom Polynomial class has a predict method that takes a boolean
-            pred = model.predict(X_scaled, True)
-        else:
-            return "Please select a valid model."
+    # except FileNotFoundError as e:
+    #     return f"Error: One or more model files were not found. Please ensure the files exist at the correct path: {e}"
+    # except Exception as e:
+    #     return f"An unexpected error occurred: {e}"
+    
+# def load_scaler(path):
+#     return joblib.load(path)
 
-        # Inverse transform the prediction and return
-        final_price = np.exp(pred)
-        return f"{final_price[0]:,.2f} Bath"
+# def load_model_predict(model_choice,model_path,X):
+#     if model_choice == 'xgb':
+#         model = joblib.load(model_path)
+#         return model.predict(X)
+#     elif model_choice == 'pr':
+#         # Load and predict with Polynomial Regression model
+#         model = mlflow.sklearn.load_model(model_path)
+#         return model.pred(X,True)
+#     else:
+#         return "Please select a valid model."
 
-    except FileNotFoundError as e:
-        return f"Error: One or more model files were not found. Please ensure the files exist at the correct path: {e}"
-    except Exception as e:
-        return f"An unexpected error occurred: {e}"
+# def get_scaler_path():
+#     return os.path.join(BASE_DIR, '..', 'models', 'scaler.pkl')
+
+# def get_model_path():
+#     model_path = os.path.join(BASE_DIR, '..', 'models', 'model.pkl')
+#     # poly_model_path = os.path.join(BASE_DIR, '..', 'models', 'model_polynomial.pkl')
+#     model_uri = "../mlruns/0/models/m-8f5af5f6d6404e678c6762691bd8faee/artifacts"
+
+#     return model_path,model_uri
