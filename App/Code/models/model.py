@@ -4,6 +4,9 @@ import math
 from sklearn.model_selection import KFold
 import math 
 import numpy as np
+import matplotlib.pyplot as plt
+import time
+import mlflow
 
 class LinearRegression(object):
     
@@ -201,3 +204,108 @@ class Polynomial(LinearRegression):
         super().__init__(None, lr,method,weight_init,use_momentum,degree=degree )
     
                     
+class LogisticRegression:
+    
+    def __init__(self, k, n, method, r2=0,alpha = 0.001, max_iter=5000):
+        self.k = k
+        self.n = n
+        self.alpha = alpha
+        self.max_iter = max_iter
+        self.method = method
+        self.r2 = r2
+        
+    def xaviai_initialize(self,n_input,n_output):
+        lower,upper = -(1.0/np.sqrt(n_input)), (1.0/np.sqrt(n_input))
+        numbers = np.random.rand(n_output)
+        scaled = lower + numbers*(numbers-lower)
+        return scaled
+
+    def fit(self, X, Y):
+        self.W = np.random.rand(self.n, self.k)
+        # self.W = self.xaviai_initialize(self.k,self.k)
+        self.losses = []
+        
+        if self.method == "batch":
+            start_time = time.time()
+            for i in range(self.max_iter):
+                loss, grad =  self.gradient(X, Y)
+                self.losses.append(loss)
+                self.W = self.W - self.alpha * grad
+            #     if i % 500 == 0:
+            #         print(f"Loss at iteration {i}", loss)
+            # print(f"time taken: {time.time() - start_time}")
+            
+        elif self.method == "minibatch":
+            start_time = time.time()
+            batch_size = int(0.3 * X.shape[0])
+            for i in range(self.max_iter):
+                ix = np.random.randint(0, X.shape[0]) #<----with replacement
+                batch_X = X[ix:ix+batch_size]
+                batch_Y = Y[ix:ix+batch_size]
+                loss, grad = self.gradient(batch_X, batch_Y)
+                self.losses.append(loss)
+                self.W = self.W - self.alpha * grad
+            #     if i % 500 == 0:
+            #         print(f"Loss at iteration {i}", loss)
+            # print(f"time taken: {time.time() - start_time}")
+            
+        elif self.method == "sto":
+            start_time = time.time()
+            list_of_used_ix = []
+            for i in range(self.max_iter):
+                idx = np.random.randint(X.shape[0])
+                while i in list_of_used_ix:
+                    idx = np.random.randint(X.shape[0])
+                X_train = X[idx, :].reshape(1, -1)
+                Y_train = Y[idx]
+                loss, grad = self.gradient(X_train, Y_train)
+                self.losses.append(loss)
+                self.W = self.W - self.alpha * grad
+                
+                list_of_used_ix.append(i)
+                if len(list_of_used_ix) == X.shape[0]:
+                    list_of_used_ix = []
+            #     if i % 500 == 0:
+            #         print(f"Loss at iteration {i}", loss)
+            # print(f"time taken: {time.time() - start_time}")
+            
+        else:
+            raise ValueError('Method must be one of the followings: "batch", "minibatch" or "sto".')
+        
+    def derivation(self, theta):
+        return self.r2 * 2 * theta
+    
+    def gradient(self, X, Y):
+        m = X.shape[0]
+        h = self.h_theta(X, self.W)
+        loss = - np.sum(Y*np.log(h)) / m
+        error = h - Y
+        grad = self.softmax_grad(X, error)
+        grad += self.derivation(self.W)
+        return loss, grad
+
+    def softmax(self, theta_t_x):
+        return np.exp(theta_t_x) / np.sum(np.exp(theta_t_x), axis=1, keepdims=True)
+
+    def softmax_grad(self, X, error):
+        return  X.T @ error
+
+    def h_theta(self, X, W):
+        '''
+        Input:
+            X shape: (m, n)
+            w shape: (n, k)
+        Returns:
+            yhat shape: (m, k)
+        '''
+        return self.softmax(X @ W)
+    
+    def predict(self, X_test):
+        return np.argmax(self.h_theta(X_test, self.W), axis=1)
+    
+    def plot(self):
+        plt.plot(np.arange(len(self.losses)) , self.losses, label = "Train Losses")
+        plt.title("Losses")
+        plt.xlabel("epoch")
+        plt.ylabel("losses")
+        plt.legend()

@@ -7,6 +7,7 @@ from models.model import *
 external_stylesheets = [dbc.themes.CERULEAN]
 app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP],)
 from pages.main_page import *
+from pages.main_page import *
 
 # Navigation Bar
 navbar = dbc.NavbarSimple(
