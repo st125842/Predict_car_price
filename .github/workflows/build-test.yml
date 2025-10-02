@@ -38,8 +38,18 @@ jobs:
       - name: Compose up
         run: docker compose up -d
       # Execute pytest
-      - name: Testing
-        run: docker compose exec -it web pytest Code/test_app_call_back.py
+      # - name: Testing
+      #   run: docker compose exec -it web pytest Code/test_app_call_back.py
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12.11
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run test outside Docker
+        run: pytest Code/test_app_call_back.py
 
       # If the testing pass, upload the image
       - name: Login to Docker Hub
