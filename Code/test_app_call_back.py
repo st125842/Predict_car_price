@@ -21,16 +21,16 @@ def test_model_output_shape():
     fuel =  0
     transmission = 1
     # scaler = load_scaler(scaler_path)
-    scaler_path = get_scaler_path()
+    # scaler_path = get_scaler_path()
     model_path,_ = get_model_path()
 
-    scaler = load_scaler(scaler_path)
+    # scaler = load_scaler(scaler_path)
     model = joblib.load(model_path)
     # model_path,model_url = load_model_predict
-    X = [[year, engine, max_power, seats, fuel, transmission]]
-    X_scaled = scaler.transform(X)
+    # X = 
+    # X_scaled = scaler.transform(X)
 
-    pred = model.predict(X_scaled)
+    pred = model.predict([[year, engine, max_power, seats, fuel, transmission]])
     # print(os.getprint(os.getcwd)
     # print(pred.shape)
     assert pred.shape == (1,), f"Expected prediction shape (1,), got {pred.shape}"
