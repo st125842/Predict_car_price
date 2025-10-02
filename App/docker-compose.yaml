@@ -2,7 +2,7 @@ version: '3.9'
 services:
   web:
     command: python /root/code/Code/index.py
-    image: peerapatst125842/dash-demo-2:a2.0
+    image: peerapatst125842/a3:a2.0
     build: 
       context: .
       dockerfile: Dockerfile
