@@ -39,7 +39,7 @@ jobs:
         run: docker compose up -d
       # Execute pytest
       - name: Testing
-        run: docker compose exec web sh -c "cd /root/code/Code && pytest test_app_call_back.py -v"
+        run: docker compose exec web pytest Code/test_app_call_back.py
 
       # If the testing pass, upload the image
       - name: Login to Docker Hub
