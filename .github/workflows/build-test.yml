@@ -80,10 +80,12 @@ jobs:
         with:
           host: ${{ vars.HOST }}
           username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
+          # key: ${{ secrets.KEY }}
+          key: ${{vars.KEY}}
           proxy_host: ${{ vars.PROXY_HOST }}
           proxy_username: ${{ secrets.USERNAME }}
-          proxy_key: ${{ secrets.KEY }}
+          # proxy_key: ${{ secrets.KEY }}
+          proxy_key: ${{vars.KEY}}
           script: |
             tag=${{ github.ref_name }} docker compose -f st125842/docker-compose.yml down
             tag=${{ github.ref_name }} docker compose -f st125842/docker-compose.yml up -d
