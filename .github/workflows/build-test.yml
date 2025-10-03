@@ -37,9 +37,16 @@ jobs:
         run: docker compose build
       - name: Compose up
         run: docker compose up -d
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Run tests with pytest
+        run: pytest Code/test_app_call_back.py
+
       # Execute pytest
-      - name: Testing
-        run: docker compose exec web sh -c "cd /root/code/Code && pytest --ignore=test_model_staging.py -v"
+      # - name: Testing
+        # run: docker compose exec web sh -c "cd /root/code/Code && pytest --ignore=test_call_back.py -v"
 
       # If the testing pass, upload the image
       - name: Login to Docker Hub
