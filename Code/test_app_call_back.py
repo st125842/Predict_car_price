@@ -9,7 +9,7 @@ import sys
 # print(os.getcwd())
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 from utils import *
-from models.model import Polynomial,LinearRegression,LogisticRegression
+# from models.model import Polynomial,LinearRegression,LogisticRegression
 
 def test_model_output_shape():
     # model
