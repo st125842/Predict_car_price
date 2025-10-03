@@ -5,8 +5,12 @@ import pickle
 import cloudpickle
 import sys
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+sys.path.insert(0, BASE_DIR)
 from models.model import *
 from dotenv import load_dotenv
+
+
 dotenv_path = '../.env' 
 load_dotenv(dotenv_path=dotenv_path)
 
@@ -58,14 +62,11 @@ def mlflow_model(stage='Staging'):
     return model
 
 def get_scaler_path():
-    return 'models/scaler.pkl'
+    return os.path.join(BASE_DIR, 'models', 'scaler.pkl')
 
 def get_model_path():
-    model_path = 'models/model.pkl'
-    # poly_model_path = os.path.join(BASE_DIR, '..', 'models', 'model_polynomial.pkl')
-    # model_uri = "../mlruns/0/models/m-8f5af5f6d6404e678c6762691bd8faee/artifacts"
-    model_uri = 'models/model_polynomial.pkl'
-    # print(os.environ['APP_MODEL_NAME'])
-    return model_path,model_uri
+    model_path = os.path.join(BASE_DIR, 'models', 'model.pkl')
+    model_uri = os.path.join(BASE_DIR, 'models', 'model_polynomial.pkl')
+    return model_path, model_uri
 
 
