@@ -10,5 +10,4 @@ services:
       - PORT=80
     ports:
       - 8050:80
-    env_file:
-      - /.env
+ 
