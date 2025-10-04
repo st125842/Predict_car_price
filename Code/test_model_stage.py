@@ -17,8 +17,8 @@ load_dotenv(dotenv_path)
 
 @pytest.fixture(scope="module")
 def a3_model():
-    user = os.environ['MLFLOW_USERNAME']
-    pas = os.environ['MLFLOW_PASSWORD']
+    user = os.getenv('MLFLOW_USERNAME')
+    pas = os.getenv('MLFLOW_PASSWORD')
     mlflow.set_tracking_uri(f"https://{user}:{pas}@mlflow.ml.brain.cs.ait.ac.th")
     return mlflow.sklearn.load_model(model_uri="models:/st125842-a3-model/1")
 

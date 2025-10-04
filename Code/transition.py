@@ -12,7 +12,7 @@ def register_model_to_production():
     # os.environ['MLFLOW_TRACKING_PASSWORD'] = 'password'
     # os.environ['MLFLOW_TRACKING_URI'] = "https://mlflow.ml.brain.cs.ait.ac.th"
 
-    model_name = os.environ['APP_MODEL_NAME']
+    model_name = os.getenv['APP_MODEL_NAME']
 
     client = MlflowClient()
     print(f"Looking for model: {model_name}")
