@@ -8,11 +8,11 @@ def register_model_to_production():
 
     # Set MLflow authentication
     
-    # os.environ['MLFLOW_TRACKING_USERNAME'] = 'admin'
-    # os.environ['MLFLOW_TRACKING_PASSWORD'] = 'password'
-    # os.environ['MLFLOW_TRACKING_URI'] = "https://mlflow.ml.brain.cs.ait.ac.th"
+    os.environ['MLFLOW_TRACKING_USERNAME'] = 'admin'
+    os.environ['MLFLOW_TRACKING_PASSWORD'] = 'password'
+    os.environ['MLFLOW_TRACKING_URI'] = "https://mlflow.ml.brain.cs.ait.ac.th"
 
-    model_name = os.getenv['APP_MODEL_NAME']
+    model_name = os.getenv("APP_MODEL_NAME", "st125842-a3-model")
 
     client = MlflowClient()
     print(f"Looking for model: {model_name}")
