@@ -33,4 +33,4 @@ jobs:
       - name: Testing
         run: docker compose exec web pytest Code/test_model_stage.py -v
       - name: Model Transition
-        run: docker compose exec web Code/python transition.py
+        run: docker compose exec web python Code/transition.py
